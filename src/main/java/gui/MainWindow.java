@@ -1,6 +1,7 @@
 package gui;
 
 import entities.Song;
+import utils.SongService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -18,10 +20,10 @@ public class MainWindow extends JFrame{
     private static MainWindow instance = null;
 
     private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myDB");
-    private EntityManager entityManager = entityManagerFactory.createEntityManager();
+    public EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-    public int mainWindowWidth = 400;
-    public int mainWindowHeight = 400;
+    public int mainWindowWidth = 480;
+    public int mainWindowHeight = 340;
     private	JPanel panel1;
     private	JPanel panel2;
     private	JPanel panel3;
@@ -29,8 +31,12 @@ public class MainWindow extends JFrame{
     private JTabbedPane tabbedPane;
     private JScrollPane scrollPane;
     private JTable table;
+    public java.util.List<Song> actualSongsList = new ArrayList<>();
+    public SongService songService = new SongService(entityManager);
 
-    private JFrame addSongWindow;
+    private String[] columnNames = {"Title","Type","Length","Rating","Update","Delete"};
+
+    private AddSongWindow addSongWindow;
 
     public static MainWindow getInstance() {
         if (instance == null) {
@@ -69,24 +75,6 @@ public class MainWindow extends JFrame{
         });
     }
 
-    private void persistSong() {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            Song song = new Song();
-            song.setTitle("Tribute");
-            song.setType("Rock");
-            song.setLength(273);
-            song.setRating(4.3);
-            entityManager.persist(song);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-        }
-    }
-
     private JTabbedPane generateTabbedPane() {
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab( "Songs", panel1 );
@@ -98,7 +86,7 @@ public class MainWindow extends JFrame{
 
     private void setMainWindowValues() {
         setSize(mainWindowWidth, mainWindowHeight);
-        setLayout(new FlowLayout());
+        getContentPane().setLayout( new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
         centerWindow();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
@@ -110,34 +98,34 @@ public class MainWindow extends JFrame{
     public void generatePage1()
     {
         panel1 = new JPanel();
-        panel1.setLayout( new FlowLayout() );
+        //panel1.setLayout( new FlowLayout());
+        //panel1.setLayout( new BoxLayout());
+        //panel1.setLayout( new WrapLayout());
 
         scrollPane = new JScrollPane(generateTable());
-        //scrollPane.setLayout(new FlowLayout());
 
-
-        panel1.add(scrollPane, new FlowLayout());
-        panel1.add(generateAddSongButton(), new FlowLayout());
+        panel1.add(scrollPane, BorderLayout.NORTH);
+        panel1.add(generateAddSongButton(), BorderLayout.SOUTH);
 
     }
 
     private JTable generateTable() {
-        String[] columnNames = {"Title","Type","Length","Rating","Update","Delete"};
         Object[][] data = generateDataFromDataBase();
-
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         table = new JTable(model);
+        setTableButtons();
+        return table;
+    }
+
+    private void setTableButtons() {
         table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         table.getColumn("Update").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Update").setCellEditor(new ButtonEditor(new JCheckBox()));
+        table.getColumn("Update").setCellEditor(new ButtonEditor(new JCheckBox(),this));
         table.getColumn("Delete").setCellRenderer(new ButtonRenderer());
-        table.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox()));
-
+        table.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox(),this));
 
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
-
-        return table;
     }
 
     private JButton generateAddSongButton() {
@@ -147,13 +135,16 @@ public class MainWindow extends JFrame{
         addSongButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addSongWindow = new AddSongWindow(entityManager, mainWindow);
+                //JOptionPane.showMessageDialog(frame, "Eggs are not supposed to be green.");
+                addSongWindow = new AddSongWindow(mainWindow);
             }
         });
         return addSongButton;
     }
 
     private Object[][] generateDataFromDataBase() {
+
+        actualSongsList.clear();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -163,6 +154,7 @@ public class MainWindow extends JFrame{
             int j = 0;
             for (Iterator i = songCollection.iterator(); i.hasNext();) {
                 Song e = (Song) i.next();
+                actualSongsList.add(e);
                 data[j][0] = e.getTitle();
                 data[j][1] = e.getType();
                 data[j][2] = e.getLength();
@@ -192,36 +184,8 @@ public class MainWindow extends JFrame{
 
     public void revalidateMainWindow(){
         System.out.println("revalidateMainWindow");
-
-
-
-        tabbedPane.remove(panel1);
-        tabbedPane.remove(panel2);
-        tabbedPane.remove(panel3);
-        tabbedPane.removeAll();
-
-
-        tabbedPane.addTab("Songs2", panel1);
-        tabbedPane.addTab( "Covers", panel2 );
-        tabbedPane.addTab( "Authors", panel3 );
-        tabbedPane.invalidate();
-        tabbedPane.validate();
-        tabbedPane.repaint();
-
-
-        table.revalidate();
-        table.repaint();
-        scrollPane.remove(table);
-        table.revalidate();
-        table.repaint();
-        //scrollPane.add(generateTable());
-        setSize(600,600);
-        revalidate();
-        repaint();
-        tabbedPane.revalidate();
-        tabbedPane.repaint();
-        panel1.revalidate();
-        panel1.repaint();
+        table.setModel(new DefaultTableModel(generateDataFromDataBase(), columnNames));
+        setTableButtons();
     }
 
     public void generatePage2()

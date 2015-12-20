@@ -1,6 +1,6 @@
 package gui;
 
-import utils.SongService;
+import entities.Song;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -9,10 +9,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddSongWindow extends JDialog {
+public class UpdateSongWindow extends JDialog {
     private int addSongWindowWidth = 400;
     private int addSongWindowHeight = 300;
-
     private MainWindow mainWindow;
 
     private String newTitle;
@@ -27,28 +26,33 @@ public class AddSongWindow extends JDialog {
 
     private JButton addSongButton;
 
-    public AddSongWindow(MainWindow mainWindow){
-        super(mainWindow, "Add new song", true);
+    private Song songToUpdate;
+    private Song newSong;
+
+    public UpdateSongWindow(MainWindow mainWindow, Song songToUpdate) {
+        super(mainWindow, "Update song", true);
         this.mainWindow = mainWindow;
+        this.songToUpdate = songToUpdate;
         setMainWindowValues();
         add(titlePanel());
         add(typePanel());
         add(lengthPanel());
         add(ratingPanel());
         add(buttonPanel());
+        fillTextFields();
         setVisible(true);
     }
 
     private JPanel buttonPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
-        addSongButton = new JButton("Add song");
+        addSongButton = new JButton("Update song");
         addSongButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fillTextFields();
-                mainWindow.songService.createSong(newTitle,newType,newLength,newRating);
-                mainWindow.mainWindowHeight=20;
+                updateTextFields();
+                mainWindow.songService.updateSong(songToUpdate.getId(), newTitle, newType, newLength, newRating);
+                mainWindow.mainWindowHeight = 20;
                 mainWindow.revalidateMainWindow();
                 dispose();
             }
@@ -58,6 +62,17 @@ public class AddSongWindow extends JDialog {
     }
 
     private void fillTextFields() {
+        newTitle = songToUpdate.getTitle();
+        newType = songToUpdate.getType();
+        newLength = songToUpdate.getLength();
+        newRating = songToUpdate.getRating();
+        newTitleTextField.setText(newTitle);
+        newTypeTextField.setText(newType);
+        newLengthTextField.setText(newLength.toString());
+        newRatingTextField.setText(newRating.toString());
+    }
+
+    private void updateTextFields() {
         newTitle = newTitleTextField.getText();
         newType = newTypeTextField.getText();
         newLength = Integer.parseInt(newLengthTextField.getText());
@@ -103,6 +118,7 @@ public class AddSongWindow extends JDialog {
 
     private void setMainWindowValues() {
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+        //setLocationRelativeTo(null);
         setSize(addSongWindowWidth, addSongWindowHeight);
         centerWindow();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
