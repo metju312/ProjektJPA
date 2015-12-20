@@ -1,9 +1,8 @@
-package gui;
+package gui.windows.dialogs;
 
 import entities.Song;
+import gui.windows.frames.MainWindow;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -53,7 +52,7 @@ public class UpdateSongWindow extends JDialog {
                 updateTextFields();
                 mainWindow.songService.updateSong(songToUpdate.getId(), newTitle, newType, newLength, newRating);
                 mainWindow.mainWindowHeight = 20;
-                mainWindow.revalidateMainWindow();
+                mainWindow.songsPanel.refreshSongsTable();
                 dispose();
             }
         });

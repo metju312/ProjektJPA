@@ -1,4 +1,4 @@
-package gui;
+package gui.layouts;
 
 import java.awt.*;
 import javax.swing.JScrollPane;

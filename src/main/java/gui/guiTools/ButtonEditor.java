@@ -1,11 +1,9 @@
-package gui;
+package gui.guiTools;
 
-import entities.Song;
-import utils.SongService;
+import gui.windows.frames.MainWindow;
+import gui.windows.dialogs.UpdateSongWindow;
 
-import javax.persistence.EntityTransaction;
 import javax.swing.*;
-import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,14 +61,14 @@ public class ButtonEditor extends DefaultCellEditor  {
                 int dialogButton = JOptionPane.YES_NO_OPTION;
                 int dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure?","Warning",dialogButton);
                 if(dialogResult == JOptionPane.YES_OPTION){
-                    mainWindow.songService.removeSong(mainWindow.actualSongsList.get(buttonRow).getId());
-                    mainWindow.revalidateMainWindow();
+                    mainWindow.songService.removeSong(mainWindow.songsPanel.actualSongsList.get(buttonRow).getId());
+                    mainWindow.songsPanel.refreshSongsTable();
                     System.out.println("usuwam row:"+ buttonRow);
                 }else{
                     System.out.println("nie usuwam");
                 }
             }else{
-                updateSongWindow = new UpdateSongWindow(mainWindow, mainWindow.actualSongsList.get(buttonRow));
+                updateSongWindow = new UpdateSongWindow(mainWindow, mainWindow.songsPanel.actualSongsList.get(buttonRow));
             }
         }
         isPushed = false;

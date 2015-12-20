@@ -1,4 +1,6 @@
-package gui;
+package main;
+
+import gui.windows.frames.MainWindow;
 
 import javax.swing.*;
 

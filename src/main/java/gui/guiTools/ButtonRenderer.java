@@ -1,4 +1,4 @@
-package gui;
+package gui.guiTools;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
