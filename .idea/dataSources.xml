@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="1448798987">
+    <data-source source="LOCAL" name="myDB/Hibernate" uuid="5f023b23-2c3e-4e57-a9ab-4a8b1c38b643">
+      <driver-ref>h2.embedded</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.h2.Driver</jdbc-driver>
+      <jdbc-url>jdbc:h2:file:C:/data/myDB</jdbc-url>
+      <libraries>
+        <library>
+          <url>jar://$MAVEN_REPOSITORY$/com/h2database/h2/1.4.190/h2-1.4.190.jar!/</url>
+        </library>
+      </libraries>
+    </data-source>
+  </component>
+</project>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="myDB/Hibernate" uuid="5f023b23-2c3e-4e57-a9ab-4a8b1c38b643">
+    <database-info product="H2" version="1.4.190 (2015-10-11)" jdbc-version="4.0" driver-name="H2 JDBC Driver" driver-version="1.4.190 (2015-10-11)">
+      <identifier-quote-string>&quot;</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact"/>
+    <schema name="PUBLIC" catalog="MYDB"/>
+    <table name="AUTHOR" schema="PUBLIC" catalog="MYDB" type="TABLE">
+      <column name="ID" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="AGE" sqlType="INTEGER" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="FIRSTNAME" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="GENRE" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="LASTNAME" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="CONSTRAINT_7" columns="ID"/>
+      <exported-key name="FK6SOU8BOQMQJ5DTGYEEHXRH3JF" table="COVER_AUTHOR" schema="PUBLIC" catalog="MYDB" columns="AUTHORLIST_ID"/>
+    </table>
+    <table name="COVER" schema="PUBLIC" catalog="MYDB" type="TABLE">
+      <column name="ID" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="LENGTH" sqlType="INTEGER" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="RATING" sqlType="DOUBLE" precision="17" scale="0" nullable="true" jdbcType="8"/>
+      <column name="TITLE" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="TYPE" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="SONG_ID" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <primary-key name="CONSTRAINT_3" columns="ID"/>
+      <foreign-key name="FKTQ8C8I4C7ERN59OVKM9FFOEST" columns="SONG_ID" ref-table="SONG" ref-schema="PUBLIC" ref-catalog="MYDB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <exported-key name="FK14CHFH1CL5WIWU69X6E8PNSPM" table="COVER_AUTHOR" schema="PUBLIC" catalog="MYDB" columns="COVERLIST_ID"/>
+      <index name="FKTQ8C8I4C7ERN59OVKM9FFOEST_INDEX_3" unique="false" columns="SONG_ID"/>
+    </table>
+    <table name="COVER_AUTHOR" schema="PUBLIC" catalog="MYDB" type="TABLE">
+      <column name="COVERLIST_ID" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="AUTHORLIST_ID" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <foreign-key name="FK6SOU8BOQMQJ5DTGYEEHXRH3JF" columns="AUTHORLIST_ID" ref-table="AUTHOR" ref-schema="PUBLIC" ref-catalog="MYDB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <foreign-key name="FK14CHFH1CL5WIWU69X6E8PNSPM" columns="COVERLIST_ID" ref-table="COVER" ref-schema="PUBLIC" ref-catalog="MYDB" ref-columns="ID" update-rule="1" delete-rule="1" deferrability="2"/>
+      <index name="FK14CHFH1CL5WIWU69X6E8PNSPM_INDEX_5" unique="false" columns="COVERLIST_ID"/>
+      <index name="FK6SOU8BOQMQJ5DTGYEEHXRH3JF_INDEX_5" unique="false" columns="AUTHORLIST_ID"/>
+    </table>
+    <table name="SONG" schema="PUBLIC" catalog="MYDB" type="TABLE">
+      <column name="ID" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="LENGTH" sqlType="INTEGER" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="RATING" sqlType="DOUBLE" precision="17" scale="0" nullable="true" jdbcType="8"/>
+      <column name="TITLE" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="TYPE" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="CONSTRAINT_2" columns="ID"/>
+      <exported-key name="FKTQ8C8I4C7ERN59OVKM9FFOEST" table="COVER" schema="PUBLIC" catalog="MYDB" columns="SONG_ID"/>
+    </table>
+  </data-source>
+</component>
