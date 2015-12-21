@@ -22,7 +22,7 @@ public class CoversPanel extends JPanel {
     private MainWindow mainWindow;
     private JScrollPane scrollPane;
 
-    private String[] columnNames = {"Title","Type","Length","Rating","Update","Delete"};
+    private String[] columnNames = {"Title","Type","Length","Rating","UpdateCover","DeleteCover"};
     private JTable coversTable;
 
     public java.util.List<Cover> actualCoversList = new ArrayList<>();
@@ -59,10 +59,10 @@ public class CoversPanel extends JPanel {
 
     private void setTableButtons() {
         coversTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-        coversTable.getColumn("Update").setCellRenderer(new ButtonRenderer());
-        coversTable.getColumn("Update").setCellEditor(new ButtonEditor(new JCheckBox(),mainWindow));
-        coversTable.getColumn("Delete").setCellRenderer(new ButtonRenderer());
-        coversTable.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox(),mainWindow));
+        coversTable.getColumn("UpdateCover").setCellRenderer(new ButtonRenderer());
+        coversTable.getColumn("UpdateCover").setCellEditor(new ButtonEditor(new JCheckBox(),mainWindow));
+        coversTable.getColumn("DeleteCover").setCellRenderer(new ButtonRenderer());
+        coversTable.getColumn("DeleteCover").setCellEditor(new ButtonEditor(new JCheckBox(),mainWindow));
 
 
         coversTable.getColumnModel().getColumn(0).setPreferredWidth(180);
@@ -86,8 +86,8 @@ public class CoversPanel extends JPanel {
                 data[j][1] = e.getType();
                 data[j][2] = e.getLength();
                 data[j][3] = e.getRating();
-                data[j][4] = "update";
-                data[j][5] = "delete";
+                data[j][4] = "UpdateCover";
+                data[j][5] = "DeleteCover";
                 j++;
             }
             transaction.commit();

@@ -3,6 +3,8 @@ package gui.windows.frames;
 import gui.windows.panels.AuthorsPanel;
 import gui.windows.panels.CoversPanel;
 import gui.windows.panels.SongsPanel;
+import utils.AuthorService;
+import utils.CoverService;
 import utils.SongService;
 
 import javax.persistence.EntityManager;
@@ -19,6 +21,8 @@ public class MainWindow extends JFrame{
     public EntityManager entityManager = entityManagerFactory.createEntityManager();
 
     public SongService songService = new SongService(entityManager);
+    public CoverService coverService = new CoverService(entityManager);
+    public AuthorService authorService = new AuthorService(entityManager);
 
     public int mainWindowWidth = 560;
     public int mainWindowHeight = 256;
@@ -99,6 +103,6 @@ public class MainWindow extends JFrame{
     }
 
     public void generatePage3() {
-        authorsPanel = new AuthorsPanel();
+        authorsPanel = new AuthorsPanel(this);
     }
 }

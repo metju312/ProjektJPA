@@ -21,7 +21,7 @@ public class SongsPanel extends JPanel {
     private MainWindow mainWindow;
     private JScrollPane scrollPane;
 
-    private String[] columnNames = {"Title","Type","Length","Rating","Update","Delete"};
+    private String[] columnNames = {"Title","Type","Length","Rating","UpdateSong","DeleteSong"};
     private JTable songsTable;
 
     public java.util.List<Song> actualSongsList = new ArrayList<>();
@@ -58,10 +58,10 @@ public class SongsPanel extends JPanel {
 
     private void setTableButtons() {
         songsTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-        songsTable.getColumn("Update").setCellRenderer(new ButtonRenderer());
-        songsTable.getColumn("Update").setCellEditor(new ButtonEditor(new JCheckBox(),mainWindow));
-        songsTable.getColumn("Delete").setCellRenderer(new ButtonRenderer());
-        songsTable.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox(),mainWindow));
+        songsTable.getColumn("UpdateSong").setCellRenderer(new ButtonRenderer());
+        songsTable.getColumn("UpdateSong").setCellEditor(new ButtonEditor(new JCheckBox(),mainWindow));
+        songsTable.getColumn("DeleteSong").setCellRenderer(new ButtonRenderer());
+        songsTable.getColumn("DeleteSong").setCellEditor(new ButtonEditor(new JCheckBox(),mainWindow));
 
 
         songsTable.getColumnModel().getColumn(0).setPreferredWidth(180);
@@ -85,8 +85,8 @@ public class SongsPanel extends JPanel {
                 data[j][1] = e.getType();
                 data[j][2] = e.getLength();
                 data[j][3] = e.getRating();
-                data[j][4] = "update";
-                data[j][5] = "delete";
+                data[j][4] = "UpdateSong";
+                data[j][5] = "DeleteSong";
                 j++;
             }
             transaction.commit();
