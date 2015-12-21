@@ -85,6 +85,7 @@ public class AddAuthorWindow extends JDialog implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fillTextFields();
+                //mainWindow.authorService.createAuthor(newFirstName, newLastName, newAge, newGenre);
                 addAuthorToDB();
                 mainWindow.authorsPanel.refreshAuthorsTable();
                 dispose();

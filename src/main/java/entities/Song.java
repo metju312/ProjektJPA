@@ -61,7 +61,7 @@ public class Song {
         this.rating = rating;
     }
 
-    @OneToMany(mappedBy = "song", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "song", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     public List<Cover> getCoverList() {
         return coverList;
     }

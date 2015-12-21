@@ -56,7 +56,7 @@ public class Author {
         this.genre = genre;
     }
 
-    @ManyToMany(mappedBy="authorList")
+    @ManyToMany(mappedBy="authorList", cascade = CascadeType.REMOVE)
     public List<Cover> getCoverList() {
         return coverList;
     }

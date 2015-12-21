@@ -62,6 +62,7 @@ public class MainWindow extends JFrame{
             public void stateChanged(ChangeEvent changeEvent) {
                 songsPanel.refreshSongsTable();
                 coversPanel.refreshCoversTable();
+                authorsPanel.refreshAuthorsTable();
             }
         };
         tabbedPane.addChangeListener(changeListener);
