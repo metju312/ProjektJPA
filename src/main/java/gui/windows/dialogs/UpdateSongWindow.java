@@ -2,15 +2,15 @@ package gui.windows.dialogs;
 
 import entities.Song;
 import gui.windows.frames.MainWindow;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class UpdateSongWindow extends JDialog {
-    private int addSongWindowWidth = 400;
-    private int addSongWindowHeight = 300;
+    private int addSongWindowWidth = 320;
+    private int addSongWindowHeight = 240;
     private MainWindow mainWindow;
 
     private String newTitle;
@@ -33,10 +33,10 @@ public class UpdateSongWindow extends JDialog {
         this.mainWindow = mainWindow;
         this.songToUpdate = songToUpdate;
         setMainWindowValues();
-        add(titlePanel());
-        add(typePanel());
-        add(lengthPanel());
-        add(ratingPanel());
+        add(titlePanel(), "wrap");
+        add(typePanel(), "wrap");
+        add(lengthPanel(), "wrap");
+        add(ratingPanel(), "wrap");
         add(buttonPanel());
         fillTextFields();
         setVisible(true);
@@ -44,7 +44,7 @@ public class UpdateSongWindow extends JDialog {
 
     private JPanel buttonPanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
+        panel.setLayout(new MigLayout());
         addSongButton = new JButton("Update song");
         addSongButton.addActionListener(new ActionListener() {
             @Override
@@ -80,8 +80,8 @@ public class UpdateSongWindow extends JDialog {
 
     private JPanel ratingPanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
-        panel.add(new JLabel("Rating:"));
+        panel.setLayout(new MigLayout());
+        panel.add(new JLabel("Rating: "));
         newRatingTextField = new JTextField(20);
         panel.add(newRatingTextField);
         return panel;
@@ -89,7 +89,7 @@ public class UpdateSongWindow extends JDialog {
 
     private JPanel lengthPanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
+        panel.setLayout(new MigLayout());
         panel.add(new JLabel("Length:"));
         newLengthTextField = new JTextField(20);
         panel.add(newLengthTextField);
@@ -98,8 +98,8 @@ public class UpdateSongWindow extends JDialog {
 
     private JPanel typePanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
-        panel.add(new JLabel("Type:"));
+        panel.setLayout(new MigLayout());
+        panel.add(new JLabel("Type:    "));
         newTypeTextField = new JTextField(20);
         panel.add(newTypeTextField);
         return panel;
@@ -107,8 +107,8 @@ public class UpdateSongWindow extends JDialog {
 
     private JPanel titlePanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
-        panel.add(new JLabel("Title:"));
+        panel.setLayout(new MigLayout());
+        panel.add(new JLabel("Title:     "));
         newTitleTextField = new JTextField(20);
         panel.add(newTitleTextField);
         return panel;
@@ -116,8 +116,7 @@ public class UpdateSongWindow extends JDialog {
 
 
     private void setMainWindowValues() {
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
-        //setLocationRelativeTo(null);
+        setLayout(new MigLayout());
         setSize(addSongWindowWidth, addSongWindowHeight);
         centerWindow();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);

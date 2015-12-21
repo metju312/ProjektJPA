@@ -18,8 +18,8 @@ public class MainWindow extends JFrame{
 
     public SongService songService = new SongService(entityManager);
 
-    public int mainWindowWidth = 480;
-    public int mainWindowHeight = 340;
+    public int mainWindowWidth = 560;
+    public int mainWindowHeight = 256;
 
     public SongsPanel songsPanel;
     public CoversPanel coversPanel;
@@ -37,7 +37,7 @@ public class MainWindow extends JFrame{
         centerWindow();
         generateTabbedPanePages();
         add(generateTabbedPane());
-        closeDatabaseConnection();
+        closeDatabaseConnectionOnCloseAplicationButton();
     }
 
     private void generateTabbedPanePages() {
@@ -54,7 +54,7 @@ public class MainWindow extends JFrame{
         return tabbedPane;
     }
 
-    private void closeDatabaseConnection() {
+    private void closeDatabaseConnectionOnCloseAplicationButton() {
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {

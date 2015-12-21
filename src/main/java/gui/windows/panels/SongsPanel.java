@@ -3,12 +3,15 @@ package gui.windows.panels;
 import entities.Song;
 import gui.guiTools.ButtonEditor;
 import gui.guiTools.ButtonRenderer;
+import gui.guiTools.MySongsTableModel;
 import gui.windows.dialogs.AddSongWindow;
 import gui.windows.frames.MainWindow;
+import net.miginfocom.swing.MigLayout;
 
 import javax.persistence.EntityTransaction;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ public class SongsPanel extends JPanel {
     public SongsPanel(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
         setCustomLayout();
-        add(generateScrollPane());
+        add(generateScrollPane(), "wrap");
         add(generateAddSongButton());
     }
 
@@ -50,9 +53,7 @@ public class SongsPanel extends JPanel {
     }
 
     private JTable generateTable() {
-        dataToTable = generateDataFromDataBase();
-        DefaultTableModel model = new DefaultTableModel(dataToTable, columnNames);
-        songsTable = new JTable(model);
+        songsTable = new JTable(new DefaultTableModel(generateDataFromDataBase(), columnNames));
         setTableButtons();
         return songsTable;
     }
@@ -64,8 +65,9 @@ public class SongsPanel extends JPanel {
         songsTable.getColumn("Delete").setCellRenderer(new ButtonRenderer());
         songsTable.getColumn("Delete").setCellEditor(new ButtonEditor(new JCheckBox(),mainWindow));
 
-        songsTable.setPreferredScrollableViewportSize(songsTable.getPreferredSize());
-        songsTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+
+        songsTable.getColumnModel().getColumn(0).setPreferredWidth(180);
+        songsTable.setPreferredScrollableViewportSize(new Dimension(500, 120));
     }
 
     private Object[][] generateDataFromDataBase() {
@@ -115,8 +117,6 @@ public class SongsPanel extends JPanel {
     }
 
     private void setCustomLayout() {
-        //songsPanel.setLayout( new FlowLayout());
-        //songsPanel.setLayout( new BoxLayout());
-        //songsPanel.setLayout( new WrapLayout());
+        setLayout(new MigLayout());
     }
 }
