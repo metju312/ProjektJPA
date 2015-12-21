@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class MainWindow extends JFrame{
     private static MainWindow instance = null;
@@ -51,6 +53,14 @@ public class MainWindow extends JFrame{
         tabbedPane.addTab("Songs", songsPanel);
         tabbedPane.addTab("Covers", coversPanel);
         tabbedPane.addTab("Authors", authorsPanel);
+
+        ChangeListener changeListener = new ChangeListener() {
+            public void stateChanged(ChangeEvent changeEvent) {
+                songsPanel.refreshSongsTable();
+                coversPanel.refreshCoversTable();
+            }
+        };
+        tabbedPane.addChangeListener(changeListener);
         return tabbedPane;
     }
 
@@ -85,7 +95,7 @@ public class MainWindow extends JFrame{
     }
 
     public void generatePage2() {
-        coversPanel = new CoversPanel();
+        coversPanel = new CoversPanel(this);
     }
 
     public void generatePage3() {

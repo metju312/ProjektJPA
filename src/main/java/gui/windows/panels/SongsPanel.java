@@ -3,7 +3,6 @@ package gui.windows.panels;
 import entities.Song;
 import gui.guiTools.ButtonEditor;
 import gui.guiTools.ButtonRenderer;
-import gui.guiTools.MySongsTableModel;
 import gui.windows.dialogs.AddSongWindow;
 import gui.windows.frames.MainWindow;
 import net.miginfocom.swing.MigLayout;
@@ -22,7 +21,6 @@ public class SongsPanel extends JPanel {
     private MainWindow mainWindow;
     private JScrollPane scrollPane;
 
-    private Object[][] dataToTable;
     private String[] columnNames = {"Title","Type","Length","Rating","Update","Delete"};
     private JTable songsTable;
 
@@ -101,7 +99,7 @@ public class SongsPanel extends JPanel {
         return null;
     }
 
-    private int numberOfSongs(Collection songCollection) {
+    public int numberOfSongs(Collection songCollection) {
         int counter = 0;
         for (Iterator i = songCollection.iterator(); i.hasNext();) {
             Song e = (Song) i.next();
@@ -111,7 +109,6 @@ public class SongsPanel extends JPanel {
     }
 
     public void refreshSongsTable(){
-        System.out.println("refreshSongsTable");
         songsTable.setModel(new DefaultTableModel(generateDataFromDataBase(), columnNames));
         setTableButtons();
     }

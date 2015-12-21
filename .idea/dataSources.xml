@@ -5,6 +5,7 @@
       <driver-ref>h2.embedded</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.h2.Driver</jdbc-driver>
+      <jdbc-url>jdbc:h2:file:C:/data/myDB</jdbc-url>
       <libraries>
         <library>
           <url>jar://$MAVEN_REPOSITORY$/com/h2database/h2/1.4.190/h2-1.4.190.jar!/</url>

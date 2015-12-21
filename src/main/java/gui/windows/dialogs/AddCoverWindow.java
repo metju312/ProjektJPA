@@ -1,13 +1,18 @@
 package gui.windows.dialogs;
 
+import entities.Song;
 import gui.windows.frames.MainWindow;
 import net.miginfocom.swing.MigLayout;
+import utils.CoverService;
 
+import javax.persistence.EntityTransaction;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
+import java.util.Iterator;
 
-public class AddSongWindow extends JDialog {
+public class AddCoverWindow extends JDialog implements ActionListener {
     private int addSongWindowWidth = 320;
     private int addSongWindowHeight = 240;
 
@@ -25,10 +30,14 @@ public class AddSongWindow extends JDialog {
 
     private JButton addSongButton;
 
-    public AddSongWindow(MainWindow mainWindow){
-        super(mainWindow, "Add new song", true);
+    private String choosenSongTitle;
+    private Song choosenSong;
+
+    public AddCoverWindow(MainWindow mainWindow){
+        super(mainWindow, "Add new cover relative to choosen song", true);
         this.mainWindow = mainWindow;
         setMainWindowValues();
+        add(generateComboBox(), "wrap");
         add(titlePanel(), "wrap");
         add(typePanel(), "wrap");
         add(lengthPanel(), "wrap");
@@ -37,17 +46,47 @@ public class AddSongWindow extends JDialog {
         setVisible(true);
     }
 
+    private JComboBox generateComboBox() {
+        String[] allSongsTitles = generateAllSongsTitles();
+        JComboBox comboBox = new JComboBox(allSongsTitles);
+        comboBox.setSelectedIndex(0);
+        comboBox.addActionListener(this);
+        return comboBox;
+    }
+
+    private String[] generateAllSongsTitles() {
+        EntityTransaction transaction = mainWindow.entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Collection songCollection = mainWindow.entityManager.createQuery("SELECT e FROM Song e").getResultList();
+            String[] titles = new String[mainWindow.songsPanel.numberOfSongs(songCollection)];
+            int j = 0;
+            for (Iterator i = songCollection.iterator(); i.hasNext();) {
+                Song e = (Song) i.next();
+                titles[j] = e.getTitle();
+                j++;
+            }
+            transaction.commit();
+            return titles;
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        }
+        return null;
+    }
+
     private JPanel buttonPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new MigLayout());
-        addSongButton = new JButton("Add song");
+        addSongButton = new JButton("Add cover");
         addSongButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fillTextFields();
-                mainWindow.songService.createSong(newTitle,newType,newLength,newRating);
-                mainWindow.mainWindowHeight=20;
-                mainWindow.songsPanel.refreshSongsTable();
+                CoverService coverService = new CoverService(mainWindow.entityManager);
+                coverService.createCover(newTitle,newType,newLength,newRating,choosenSong);
+                mainWindow.coversPanel.refreshCoversTable();
                 dispose();
             }
         });
@@ -109,5 +148,12 @@ public class AddSongWindow extends JDialog {
 
     private void centerWindow() {
         setLocationRelativeTo(null);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JComboBox comboBox = (JComboBox)e.getSource();
+        choosenSongTitle = (String)comboBox.getSelectedItem();
+        choosenSong = mainWindow.songsPanel.actualSongsList.get(comboBox.getSelectedIndex());
     }
 }
