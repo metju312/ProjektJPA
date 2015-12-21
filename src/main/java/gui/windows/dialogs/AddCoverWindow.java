@@ -14,7 +14,7 @@ import java.util.Iterator;
 
 public class AddCoverWindow extends JDialog implements ActionListener {
     private int addSongWindowWidth = 320;
-    private int addSongWindowHeight = 240;
+    private int addSongWindowHeight = 260;
 
     private MainWindow mainWindow;
 
