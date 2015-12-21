@@ -84,9 +84,7 @@ public class AddCoverWindow extends JDialog implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fillTextFields();
-                CoverService coverService = new CoverService(mainWindow.entityManager);
-                coverService.createCover(newTitle, newType, newLength, newRating, chosenSong);
-                System.out.println("chosen song title: " + chosenSong.getTitle());
+                mainWindow.coverService.createCover(newTitle, newType, newLength, newRating, chosenSong);
                 mainWindow.coversPanel.refreshCoversTable();
                 dispose();
             }

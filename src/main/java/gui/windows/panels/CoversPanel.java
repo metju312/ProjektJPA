@@ -100,7 +100,7 @@ public class CoversPanel extends JPanel {
         return null;
     }
 
-    private int numberOfCovers(Collection coverCollection) {
+    public int numberOfCovers(Collection coverCollection) {
         int counter = 0;
         for (Iterator i = coverCollection.iterator(); i.hasNext();) {
             Cover e = (Cover) i.next();

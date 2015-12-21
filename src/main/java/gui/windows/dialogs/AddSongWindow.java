@@ -46,7 +46,6 @@ public class AddSongWindow extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 fillTextFields();
                 mainWindow.songService.createSong(newTitle,newType,newLength,newRating);
-                mainWindow.mainWindowHeight=20;
                 mainWindow.songsPanel.refreshSongsTable();
                 dispose();
             }
