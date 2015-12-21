@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="dataSourceStorage">
-  <data-source name="myDB/Hibernate" uuid="5f023b23-2c3e-4e57-a9ab-4a8b1c38b643">
+  <data-source name="myDB/Hibernate" uuid="eb748a6b-d18f-412b-a9b7-f61aae0489e0">
     <database-info product="H2" version="1.4.190 (2015-10-11)" jdbc-version="4.0" driver-name="H2 JDBC Driver" driver-version="1.4.190 (2015-10-11)">
       <identifier-quote-string>&quot;</identifier-quote-string>
     </database-info>

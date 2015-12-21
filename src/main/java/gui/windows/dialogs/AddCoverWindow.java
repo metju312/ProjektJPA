@@ -14,7 +14,7 @@ import java.util.Iterator;
 
 public class AddCoverWindow extends JDialog implements ActionListener {
     private int addSongWindowWidth = 320;
-    private int addSongWindowHeight = 260;
+    private int addSongWindowHeight = 270;
 
     private MainWindow mainWindow;
 
@@ -28,15 +28,15 @@ public class AddCoverWindow extends JDialog implements ActionListener {
     private JTextField newLengthTextField;
     private JTextField newRatingTextField;
 
-    private JButton addSongButton;
+    private JButton addCoverButton;
 
-    private String choosenSongTitle;
-    private Song choosenSong;
+    private Song chosenSong;
 
     public AddCoverWindow(MainWindow mainWindow){
-        super(mainWindow, "Add new cover relative to choosen song", true);
+        super(mainWindow, "Add new cover relative to chosen song", true);
         this.mainWindow = mainWindow;
         setMainWindowValues();
+        setChosenSongFromFirstSong();
         add(generateComboBox(), "wrap");
         add(titlePanel(), "wrap");
         add(typePanel(), "wrap");
@@ -79,18 +79,19 @@ public class AddCoverWindow extends JDialog implements ActionListener {
     private JPanel buttonPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new MigLayout());
-        addSongButton = new JButton("Add cover");
-        addSongButton.addActionListener(new ActionListener() {
+        addCoverButton = new JButton("Add cover");
+        addCoverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fillTextFields();
                 CoverService coverService = new CoverService(mainWindow.entityManager);
-                coverService.createCover(newTitle,newType,newLength,newRating,choosenSong);
+                coverService.createCover(newTitle, newType, newLength, newRating, chosenSong);
+                System.out.println("chosen song title: " + chosenSong.getTitle());
                 mainWindow.coversPanel.refreshCoversTable();
                 dispose();
             }
         });
-        panel.add(addSongButton);
+        panel.add(addCoverButton);
         return panel;
     }
 
@@ -139,7 +140,6 @@ public class AddCoverWindow extends JDialog implements ActionListener {
 
 
     private void setMainWindowValues() {
-        //getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
         setLayout(new MigLayout());
         setSize(addSongWindowWidth, addSongWindowHeight);
         centerWindow();
@@ -153,7 +153,14 @@ public class AddCoverWindow extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         JComboBox comboBox = (JComboBox)e.getSource();
-        choosenSongTitle = (String)comboBox.getSelectedItem();
-        choosenSong = mainWindow.songsPanel.actualSongsList.get(comboBox.getSelectedIndex());
+        setChosenSongFromComboBox(comboBox);
+    }
+
+    public void setChosenSongFromComboBox(JComboBox comboBox) {
+        chosenSong = mainWindow.songsPanel.actualSongsList.get(comboBox.getSelectedIndex());
+    }
+
+    public void setChosenSongFromFirstSong() {
+        chosenSong = mainWindow.songsPanel.actualSongsList.get(0);
     }
 }

@@ -36,7 +36,7 @@ public class CoversPanel extends JPanel {
 
     private JButton generateAddCoverButton() {
         ImageIcon img = new ImageIcon("add_icon.jpg");
-        JButton addCoverButton = new JButton("Add song",img);
+        JButton addCoverButton = new JButton("Add cover",img);
         addCoverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

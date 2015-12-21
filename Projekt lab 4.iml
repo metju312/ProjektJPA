@@ -6,7 +6,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="" />
         <datasource-mapping>
-          <factory-entry name="myDB" value="5f023b23-2c3e-4e57-a9ab-4a8b1c38b643" />
+          <factory-entry name="myDB" value="eb748a6b-d18f-412b-a9b7-f61aae0489e0" />
           <factory-entry name="test" />
           <factory-entry name="thePersistenceUnit" />
         </datasource-mapping>
