@@ -20,6 +20,8 @@ public class MainWindow extends JFrame{
     private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myDB");
     public EntityManager entityManager = entityManagerFactory.createEntityManager();
 
+    public JTabbedPane tabbedPane;
+
     public SongService songService = new SongService(entityManager);
     public CoverService coverService = new CoverService(entityManager);
     public AuthorService authorService = new AuthorService(entityManager);
@@ -53,7 +55,7 @@ public class MainWindow extends JFrame{
     }
 
     private JTabbedPane generateTabbedPane() {
-        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Songs", songsPanel);
         tabbedPane.addTab("Covers", coversPanel);
         tabbedPane.addTab("Authors", authorsPanel);

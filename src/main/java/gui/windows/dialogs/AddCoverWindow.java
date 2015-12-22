@@ -1,9 +1,10 @@
 package gui.windows.dialogs;
 
+import entities.Author;
+import entities.Cover;
 import entities.Song;
 import gui.windows.frames.MainWindow;
 import net.miginfocom.swing.MigLayout;
-import utils.CoverService;
 
 import javax.persistence.EntityTransaction;
 import javax.swing.*;
@@ -11,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 public class AddCoverWindow extends JDialog implements ActionListener {
     private int addSongWindowWidth = 320;
@@ -30,14 +32,22 @@ public class AddCoverWindow extends JDialog implements ActionListener {
 
     private JButton addCoverButton;
 
+    private JComboBox comboBoxSong;
+    private JComboBox comboBoxAuthor;
+
     private Song chosenSong;
+    private Author chosenAuthor;
+
+    private boolean firstLaunch = true;
 
     public AddCoverWindow(MainWindow mainWindow){
         super(mainWindow, "Add new cover relative to chosen song", true);
         this.mainWindow = mainWindow;
         setMainWindowValues();
         setChosenSongFromFirstSong();
-        add(generateComboBox(), "wrap");
+        setChosenAuthorFromFirstAuthor();
+        add(generateComboBoxSong(), "wrap");
+        add(generateComboBoxAuthor(), "wrap");
         add(titlePanel(), "wrap");
         add(typePanel(), "wrap");
         add(lengthPanel(), "wrap");
@@ -46,12 +56,43 @@ public class AddCoverWindow extends JDialog implements ActionListener {
         setVisible(true);
     }
 
-    private JComboBox generateComboBox() {
+    private JComboBox generateComboBoxAuthor() {
+        String[] allAuthorsTitles = generateAllAuthorsTitles();
+        comboBoxAuthor = new JComboBox(allAuthorsTitles);
+        comboBoxAuthor.setSelectedIndex(0);
+        comboBoxAuthor.addActionListener(this);
+        return comboBoxAuthor;
+    }
+
+    private String[] generateAllAuthorsTitles() {
+        EntityTransaction transaction = mainWindow.entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Collection authorCollection = mainWindow.entityManager.createQuery("SELECT e FROM Author e").getResultList();
+            String[] titles = new String[mainWindow.authorsPanel.numberOfAuthors(authorCollection)+1];
+            titles[0] = "Without author";
+            int j = 1;
+            for (Iterator i = authorCollection.iterator(); i.hasNext();) {
+                Author e = (Author) i.next();
+                titles[j] = e.getFirstName() + " " + e.getLastName();
+                j++;
+            }
+            transaction.commit();
+            return titles;
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        }
+        return null;
+    }
+
+    private JComboBox generateComboBoxSong() {
         String[] allSongsTitles = generateAllSongsTitles();
-        JComboBox comboBox = new JComboBox(allSongsTitles);
-        comboBox.setSelectedIndex(0);
-        comboBox.addActionListener(this);
-        return comboBox;
+        comboBoxSong = new JComboBox(allSongsTitles);
+        comboBoxSong.setSelectedIndex(1);
+        comboBoxSong.addActionListener(this);
+        return comboBoxSong;
     }
 
     private String[] generateAllSongsTitles() {
@@ -84,13 +125,36 @@ public class AddCoverWindow extends JDialog implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fillTextFields();
-                mainWindow.coverService.createCover(newTitle, newType, newLength, newRating, chosenSong);
+                if(comboBoxAuthor.getSelectedIndex()==0){
+                    mainWindow.coverService.createCover(newTitle, newType, newLength, newRating, chosenSong);
+                }else{
+                    addCoverToDB();
+                }
+
                 mainWindow.coversPanel.refreshCoversTable();
                 dispose();
             }
         });
         panel.add(addCoverButton);
         return panel;
+    }
+
+    private void addCoverToDB() {
+        List<Author> resultList = mainWindow.entityManager.createQuery("from Author g where g.firstName = :f and g.lastName = :l", Author.class).setParameter("f", chosenAuthor.getFirstName()).setParameter("l", chosenAuthor.getLastName()).getResultList();
+        EntityTransaction transaction = mainWindow.entityManager.getTransaction();
+        transaction.begin();
+        Cover cover = new Cover();
+        cover.setTitle(newTitle);
+        cover.setType(newType);
+        cover.setLength(newLength);
+        cover.setRating(newRating);
+        cover.setSong(chosenSong);
+        for (Author author : resultList) {
+            cover.getAuthorList().add(author);
+            author.getCoverList().add(cover);
+        }
+        mainWindow.entityManager.persist(cover);
+        transaction.commit();
     }
 
     private void fillTextFields() {
@@ -150,12 +214,27 @@ public class AddCoverWindow extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JComboBox comboBox = (JComboBox)e.getSource();
-        setChosenSongFromComboBox(comboBox);
+        //JComboBox comboBox = (JComboBox)e.getSource();
+        setChosenSongFromComboBox();
+        setChosenAuthorFromComboBox();
     }
 
-    public void setChosenSongFromComboBox(JComboBox comboBox) {
-        chosenSong = mainWindow.songsPanel.actualSongsList.get(comboBox.getSelectedIndex());
+    private void setChosenAuthorFromComboBox() {
+        if(firstLaunch){
+            chosenAuthor = mainWindow.authorsPanel.actualAuthorsList.get(comboBoxAuthor.getSelectedIndex());
+            firstLaunch=false;
+        }else{
+            chosenAuthor = mainWindow.authorsPanel.actualAuthorsList.get(comboBoxAuthor.getSelectedIndex()-1);
+        }
+
+    }
+
+    public void setChosenAuthorFromFirstAuthor() {
+        chosenAuthor = mainWindow.authorsPanel.actualAuthorsList.get(0);
+    }
+
+    public void setChosenSongFromComboBox() {
+        chosenSong = mainWindow.songsPanel.actualSongsList.get(comboBoxSong.getSelectedIndex());
     }
 
     public void setChosenSongFromFirstSong() {

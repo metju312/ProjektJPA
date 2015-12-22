@@ -1,15 +1,19 @@
 package gui.guiTools;
 
+import entities.Author;
+import entities.Cover;
+import entities.Song;
 import gui.windows.dialogs.UpdateAuthorWindow;
 import gui.windows.dialogs.UpdateCoverWindow;
 import gui.windows.frames.MainWindow;
 import gui.windows.dialogs.UpdateSongWindow;
 
+import javax.persistence.EntityTransaction;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Objects;
+import java.util.*;
 
 
 public class ButtonEditor extends DefaultCellEditor  {
@@ -123,12 +127,34 @@ public class ButtonEditor extends DefaultCellEditor  {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure?","Warning",dialogButton);
         if(dialogResult == JOptionPane.YES_OPTION){
+
+            //deleteAllCoverOfSongToDelete(mainWindow.songsPanel.actualSongsList.get(buttonRow));
+
             mainWindow.songService.removeSong(mainWindow.songsPanel.actualSongsList.get(buttonRow).getId());
             mainWindow.songsPanel.refreshSongsTable();
             System.out.println("usuwam row:"+ buttonRow);
         }else{
             System.out.println("nie usuwam");
         }
+    }
+
+    private void deleteAllCoverOfSongToDelete(Song s) {
+
+        EntityTransaction transaction = mainWindow.entityManager.getTransaction();
+        try {
+            transaction.begin();
+            java.util.List<Cover> resultList = mainWindow.entityManager.createQuery("from Cover g where g.song = :t", Cover.class).setParameter("t", s).getResultList();
+            for (Cover cover : resultList) {
+                mainWindow.coverService.removeCover(cover.getId());
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+        }
+
+
     }
 
     @Override

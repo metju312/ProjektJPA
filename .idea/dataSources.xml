@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="1663638239">
-    <data-source source="LOCAL" name="myDB/Hibernate" uuid="eb748a6b-d18f-412b-a9b7-f61aae0489e0">
+  <component name="DataSourceManagerImpl" format="xml" hash="1550681360">
+    <data-source source="LOCAL" name="myDB/Hibernate" uuid="afb3cd8e-0ac3-4868-94f3-075f9ed64dbf">
       <driver-ref>h2.embedded</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.h2.Driver</jdbc-driver>

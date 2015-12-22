@@ -2,7 +2,6 @@ package gui.windows.dialogs;
 
 import entities.Author;
 import entities.Cover;
-import entities.Song;
 import gui.windows.frames.MainWindow;
 import net.miginfocom.swing.MigLayout;
 
@@ -16,7 +15,7 @@ import java.util.List;
 
 public class AddAuthorWindow extends JDialog implements ActionListener {
     private int addAuthorWindowWidth = 320;
-    private int addAuthorWindowHeight = 240;
+    private int addAuthorWindowHeight = 270;
 
     private MainWindow mainWindow;
 
@@ -34,6 +33,8 @@ public class AddAuthorWindow extends JDialog implements ActionListener {
 
     private Cover chosenCover;
 
+    private JComboBox comboBox;
+
     public AddAuthorWindow(MainWindow mainWindow){
         super(mainWindow, "Add new author", true);
         this.mainWindow = mainWindow;
@@ -48,8 +49,8 @@ public class AddAuthorWindow extends JDialog implements ActionListener {
     }
 
     private JComboBox generateComboBox() {
-        String[] allSongsTitles = generateAllCoversTitles();
-        JComboBox comboBox = new JComboBox(allSongsTitles);
+        String[] allCoversTitles = generateAllCoversTitles();
+        comboBox = new JComboBox(allCoversTitles);
         comboBox.setSelectedIndex(0);
         comboBox.addActionListener(this);
         return comboBox;
@@ -60,8 +61,9 @@ public class AddAuthorWindow extends JDialog implements ActionListener {
         try {
             transaction.begin();
             Collection coverCollection = mainWindow.entityManager.createQuery("SELECT e FROM Cover e").getResultList();
-            String[] titles = new String[mainWindow.coversPanel.numberOfCovers(coverCollection)];
-            int j = 0;
+            String[] titles = new String[mainWindow.coversPanel.numberOfCovers(coverCollection)+1];
+            titles[0] = "Without cover";
+            int j = 1;
             for (Iterator i = coverCollection.iterator(); i.hasNext();) {
                 Cover e = (Cover) i.next();
                 titles[j] = e.getTitle();
@@ -85,8 +87,11 @@ public class AddAuthorWindow extends JDialog implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fillTextFields();
-                //mainWindow.authorService.createAuthor(newFirstName, newLastName, newAge, newGenre);
-                addAuthorToDB();
+                if(comboBox.getSelectedIndex()==0){
+                    mainWindow.authorService.createAuthor(newFirstName, newLastName, newAge, newGenre);
+                }else{
+                    addAuthorToDB();
+                }
                 mainWindow.authorsPanel.refreshAuthorsTable();
                 dispose();
             }
@@ -96,8 +101,6 @@ public class AddAuthorWindow extends JDialog implements ActionListener {
     }
 
     private void addAuthorToDB() {
-        //geek = cover
-        //priject = author
         List<Cover> resultList = mainWindow.entityManager.createQuery("from Cover g where g.title = :t", Cover.class).setParameter("t", chosenCover.getTitle()).getResultList();
         EntityTransaction transaction = mainWindow.entityManager.getTransaction();
         transaction.begin();
@@ -172,14 +175,14 @@ public class AddAuthorWindow extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         JComboBox comboBox = (JComboBox)e.getSource();
-        setChosenSongFromComboBox(comboBox);
+        setChosenCoverFromComboBox(comboBox);
     }
 
-    public void setChosenSongFromComboBox(JComboBox comboBox) {
-        chosenCover = mainWindow.coversPanel.actualCoversList.get(comboBox.getSelectedIndex());
+    public void setChosenCoverFromComboBox(JComboBox comboBox) {
+        chosenCover = mainWindow.coversPanel.actualCoversList.get(comboBox.getSelectedIndex()-1);
     }
 
-    public void setChosenSongFromFirstSong() {
+    public void setChosenCoverFromFirstCover() {
         chosenCover = mainWindow.coversPanel.actualCoversList.get(0);
     }
 }

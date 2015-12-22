@@ -57,7 +57,7 @@ public class Cover {
         this.rating = rating;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn
     public Song getSong() {
         return song;
